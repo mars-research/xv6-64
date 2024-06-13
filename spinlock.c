@@ -106,7 +106,7 @@ pushcli(void)
 {
   int64 rflags;
 
-  eflags = readrflags();
+  rflags = readrflags();
   cli();
   if(mycpu()->ncli == 0)
     mycpu()->intena = rflags & FL_IF;
