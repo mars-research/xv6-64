@@ -1,5 +1,5 @@
 // This file contains definitions for the
-// x86 memory management unit (MMU).
+// x86-64 memory management unit (MMU).
 
 // Rflags register
 #define FL_IF           0x00000200      // Interrupt Enable
@@ -67,7 +67,7 @@ struct segdesc {
 #define STS_IG32    0xE     // 32-bit Interrupt Gate
 #define STS_TG32    0xF     // 32-bit Trap Gate
 
-// A virtual address 'la' has a three-part structure as follows:
+// A virtual address 'la' has a six-part structure as follows:
 //
 // +---------16----------+--------9-------+-------9--------+--------9-------+-------9--------+---------12----------+
 // |                     |    Page Map    | Page Directory |                |                |                     |
@@ -83,13 +83,17 @@ struct segdesc {
 #define PDPTX(va)       (((uint64)(va) >> PDPTSHIFT) & 0x1FF)
 
 // page directory index
-#define PDX(va)         (((uint)(va) >> PDXSHIFT) & 0x1FF)
+#define PDX(va)         (((uint64)(va) >> PDXSHIFT) & 0x1FF)
 
 // page table index
-#define PTX(va)         (((uint)(va) >> PTXSHIFT) & 0x1FF)
+#define PTX(va)         (((uint64)(va) >> PTXSHIFT) & 0x1FF)
 
 // construct virtual address from indexes and offset
-#define PGADDR(d, t, o) ((uint)((d) << PDXSHIFT | (t) << PTXSHIFT | (o)))
+#define PGADDR(l4, dpt, d, t, o) ((uint64)(((l4)  & 0x1FF) << PML4SHIFT |\
+                                           ((dpt) & 0x1FF) << PDPTSHIFT |\
+                                           ((d)   & 0x1FF) << PDXSHIFT  |\
+                                           ((t)   & 0x1FF) << PTXSHIFT  |\
+                                           ((o)   & 0xFFF)))
 
 // Page directory and page table constants.
 #define NPML4ENTRIES    512     // # page map level 4 entries
@@ -113,8 +117,8 @@ struct segdesc {
 #define PTE_PS          0x080   // Page Size
 
 // Address in page table or page directory entry
-#define PTE_ADDR(pte)   ((uint)(pte) & ~0xFFF)
-#define PTE_FLAGS(pte)  ((uint)(pte) &  0xFFF)
+#define PTE_ADDR(pte)   ((uint64)(pte) & ~0xFFF)
+#define PTE_FLAGS(pte)  ((uint64)(pte) &  0xFFF)
 
 #ifndef __ASSEMBLER__
 typedef uint64 pte_t;

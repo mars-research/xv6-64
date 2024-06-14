@@ -13,3 +13,5 @@ typedef signed int int32;
 
 typedef unsigned long long int uint64;
 typedef signed long long int int64;
+
+typedef uint64 pml4e_t;
