@@ -8,7 +8,7 @@
 #include "elf.h"
 
 extern char data[];  // defined by kernel.ld
-pde_t *kpml4;  // for use in scheduler()
+pml4e_t *kpml4;  // for use in scheduler()
 
 // Set up CPU's kernel segment descriptors.
 // Run once on entry on each CPU.
@@ -82,7 +82,7 @@ walkpgdir(pml4e_t *pml4, const void *va, int alloc)
 // physical addresses starting at pa. va and size might not
 // be page-aligned.
 static int
-mappages(pml4e_t *pml4, void *va, uint64 size, uint64 pa, int perm)
+mappages(pml4e_t *pml4, void *va, uint size, uint64 pa, int perm)
 {
   char *a, *last;
   pte_t *pte;
