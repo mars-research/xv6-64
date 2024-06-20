@@ -14,6 +14,7 @@
 #include "mmu.h"
 #include "proc.h"
 #include "x86.h"
+#include "stdarg.h"
 
 static void consputc(int);
 
@@ -25,12 +26,12 @@ static struct {
 } cons;
 
 static void
-printint(int xx, int base, int sign)
+printint(int64 xx, int base, int sign)
 {
   static char digits[] = "0123456789abcdef";
   char buf[16];
   int i;
-  uint x;
+  uint64 x;
 
   if(sign && (sign = xx < 0))
     x = -xx;
@@ -55,8 +56,10 @@ void
 cprintf(char *fmt, ...)
 {
   int i, c, locking;
-  uint *argp;
+  va_list argp;
   char *s;
+
+  va_start(argp, fmt);
 
   locking = cons.locking;
   if(locking)
@@ -65,7 +68,6 @@ cprintf(char *fmt, ...)
   if (fmt == 0)
     panic("null fmt");
 
-  argp = (uint*)(void*)(&fmt + 1);
   for(i = 0; (c = fmt[i] & 0xff) != 0; i++){
     if(c != '%'){
       consputc(c);
@@ -76,14 +78,14 @@ cprintf(char *fmt, ...)
       break;
     switch(c){
     case 'd':
-      printint(*argp++, 10, 1);
+      printint(va_arg(argp, int), 10, 1);
       break;
     case 'x':
     case 'p':
-      printint(*argp++, 16, 0);
+      printint(va_arg(argp, uint64), 16, 0);
       break;
     case 's':
-      if((s = (char*)*argp++) == 0)
+      if((s = va_arg(argp, char*)) == 0)
         s = "(null)";
       for(; *s; s++)
         consputc(*s);
@@ -101,13 +103,15 @@ cprintf(char *fmt, ...)
 
   if(locking)
     release(&cons.lock);
+
+  va_end(argp);
 }
 
 void
 panic(char *s)
 {
   int i;
-  uint pcs[10];
+  uint64 pcs[10];
 
   cli();
   cons.locking = 0;
