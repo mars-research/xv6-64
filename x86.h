@@ -95,45 +95,41 @@ xchg(volatile uint *addr, uint newval)
 }
 
 //PAGEBREAK: 36
-// Layout of the trap frame built on the stack by the
-// hardware and by trapasm.S, and passed to trap().
-struct trapframe {
-    // registers as pushed by pusha
-    uint edi;
-    uint esi;
-    uint ebp;
-    uint oesp;      // useless & ignored
-    uint ebx;
-    uint edx;
-    uint ecx;
-    uint eax;
+#ifdef X86_64
+  // Layout of the trap frame built on the stack by the
+  // hardware and by trapasm.S, and passed to trap().
+  struct trapframe {
+    uint64 rax;
+    uint64 rbx;
+    uint64 rcx;
+    uint64 rdx;
+    uint64 rbp;
+    uint64 rsi;
+    uint64 rdi;
+    uint64 r8;
+    uint64 r9;
+    uint64 r10;
+    uint64 r11;
+    uint64 r12;
+    uint64 r13;
+    uint64 r14;
+    uint64 r15;
 
-    // rest of trap frame
-    ushort gs;
-    ushort padding1;
-    ushort fs;
-    ushort padding2;
-    ushort es;
-    ushort padding3;
-    ushort ds;
-    ushort padding4;
-    uint trapno;
+    uint64 trapno;
 
     // below here defined by x86 hardware
-    uint err;
-    uint eip;
+    uint64 err;
+    uint64 rip;
     ushort cs;
-    ushort padding5;
-    uint eflags;
+    uint64 padding1 : 24;
+    uint64 rflags;
 
-    // below here only when crossing rings, such as from user to kernel
-    uint esp;
+    // In x86-64, this SS and RSP are pushed unconditionally. 
+    uint64 rsp;
     ushort ss;
-    ushort padding6;
-};
+    uint64 padding2 : 24;
+  };
 
-
-#ifdef X86_64
   struct segdesc;
 
   static inline void
