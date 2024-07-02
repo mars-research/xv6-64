@@ -17,19 +17,21 @@ extern int ncpu;
 // Saved registers for kernel context switches.
 // Don't need to save all the segment registers (%cs, etc),
 // because they are constant across kernel contexts.
-// Don't need to save %eax, %ecx, %edx, because the
-// x86 convention is that the caller has saved them.
+// Don't need to save %rax, %rcx, %rdx, ... because the
+// x86-64 convention is that the caller has saved them.
 // Contexts are stored at the bottom of the stack they
 // describe; the stack pointer is the address of the context.
 // The layout of the context matches the layout of the stack in swtch.S
 // at the "Switch stacks" comment. Switch doesn't save eip explicitly,
 // but it is on the stack and allocproc() manipulates it.
 struct context {
-  uint edi;
-  uint esi;
-  uint ebx;
-  uint ebp;
-  uint eip;
+  uint64 r15;
+  uint64 r14;
+  uint64 r13;
+  uint64 r12;
+  uint64 rbx;
+  uint64 rbp;
+  uint64 rip;
 };
 
 enum procstate { UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
