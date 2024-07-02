@@ -183,4 +183,12 @@ xchg(volatile uint *addr, uint newval)
     asm volatile("pushfq; popq %0" : "=r" (rflags));
     return rflags;
   }
+
+  static inline uint64
+  rrbp(void)
+  {
+    uint64 val;
+    asm volatile("movq %%rbp,%0" : "=r" (val));
+    return val;
+  }
 #endif // X86_64

@@ -119,7 +119,7 @@ panic(char *s)
   cprintf("lapicid %d: panic: ", lapicid());
   cprintf(s);
   cprintf("\n");
-  getcallerpcs(&s, pcs);
+  getcallerpcs((uint64*) rrbp(), pcs);
   for(i=0; i<10; i++)
     cprintf(" %p", pcs[i]);
   panicked = 1; // freeze other CPU
