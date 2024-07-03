@@ -10,6 +10,9 @@ struct sleeplock;
 struct stat;
 struct superblock;
 
+// acpi.c
+int             acpiinit(void);
+
 // bio.c
 void            binit(void);
 struct buf*     bread(uint, uint);
@@ -59,7 +62,7 @@ void            ideintr(void);
 void            iderw(struct buf*);
 
 // ioapic.c
-void            ioapicenable(int irq, int cpu);
+void            ioapicenable(int, int);
 extern uchar    ioapicid;
 void            ioapicinit(void);
 
@@ -73,7 +76,7 @@ void            kinit2(void*, void*);
 void            kbdintr(void);
 
 // lapic.c
-void            cmostime(struct rtcdate *r);
+void            cmostime(struct rtcdate*);
 int             lapicid(void);
 extern volatile uint*    lapic;
 void            lapiceoi(void);
@@ -82,7 +85,7 @@ void            lapicstartap(uchar, uint);
 void            microdelay(int);
 
 // log.c
-void            initlog(int dev);
+void            initlog(int);
 void            log_write(struct buf*);
 void            begin_op();
 void            end_op();
@@ -156,9 +159,6 @@ int             fetchint(uint, int*);
 int             fetchstr(uint, char**);
 void            syscall(void);
 
-// timer.c
-void            timerinit(void);
-
 // trap.c
 void            idtinit(void);
 extern uint     ticks;
@@ -174,17 +174,18 @@ void            uartputc(int);
 void            seginit(void);
 void            kvmalloc(void);
 pml4e_t*        setupkvm(void);
-char*           uva2ka(pde_t*, char*);
-int             allocuvm(pde_t*, uint, uint);
+void*           acpitable(uint64);
+char*           uva2ka(pml4e_t*, char*);
+int             allocuvm(pml4e_t*, uint, uint);
 int             deallocuvm(pml4e_t*, uint64, uint64);
 void            freevm(pml4e_t*);
-void            inituvm(pde_t*, char*, uint);
-int             loaduvm(pde_t*, char*, struct inode*, uint, uint);
-pde_t*          copyuvm(pde_t*, uint);
+void            inituvm(pml4e_t*, char*, uint);
+int             loaduvm(pml4e_t*, char*, struct inode*, uint, uint);
+pml4e_t*        copyuvm(pml4e_t*, uint);
 void            switchuvm(struct proc*);
 void            switchkvm(void);
-int             copyout(pde_t*, uint, void*, uint);
-void            clearpteu(pde_t *pgdir, char *uva);
+int             copyout(pml4e_t*, uint, void*, uint);
+void            clearpteu(pml4e_t*, char*);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
