@@ -2,7 +2,7 @@
 
 struct mp {             // floating pointer
   uchar signature[4];           // "_MP_"
-  uint32 physaddr;               // phys addr of MP config table
+  uint32 physaddr;              // phys addr of MP config table
   uchar length;                 // 1
   uchar specrev;                // [14]
   uchar checksum;               // all bytes must add up to 0
@@ -17,10 +17,10 @@ struct mpconf {         // configuration table header
   uchar version;                // [14]
   uchar checksum;               // all bytes must add up to 0
   uchar product[20];            // product id
-  uint32 oemtable;               // OEM table pointer
+  uint32 oemtable;              // OEM table pointer
   ushort oemlength;             // OEM table length
   ushort entry;                 // entry count
-  uint32 lapicaddr;              // address of local APIC
+  uint32 lapicaddr;             // address of local APIC
   ushort xlength;               // extended table length
   uchar xchecksum;              // extended table checksum
   uchar reserved;
@@ -33,7 +33,7 @@ struct mpproc {         // processor table entry
   uchar flags;                  // CPU flags
     #define MPBOOT 0x02           // This proc is the bootstrap processor.
   uchar signature[4];           // CPU signature
-  uint32 feature;                 // feature flags from CPUID instruction
+  uint32 feature;               // feature flags from CPUID instruction
   uchar reserved[8];
 };
 

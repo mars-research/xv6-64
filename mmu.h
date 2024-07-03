@@ -199,7 +199,7 @@ struct gatedesc {
   (gate).dpl = (d);                                       \
   (gate).p = 1;                                           \
   (gate).off_31_16 = (uint)(((off) >> 16) & 0xffff);      \
-  (gate).off_63_31 = (uint)((off) >> 32);                 \
+  (gate).off_63_32 = (uint)((off) >> 32);                 \
   (gate).rsv2 = 0;                                        \
 }
 
