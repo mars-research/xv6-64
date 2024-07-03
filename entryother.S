@@ -13,9 +13,9 @@
 #
 # Startothers (in main.c) sends the STARTUPs one at a time.
 # It copies this code (start) at 0x7000.  It puts the address of
-# a newly allocated per-core stack in start-4,the address of the
-# place to jump to (mpenter) in start-8, and the physical address
-# of entrypgdir in start-12.
+# a newly allocated per-core stack in start-8,the address of the
+# place to jump to (mpenter) in start-16, and the physical address
+# of entrypml4 in start-20.
 #
 # This code combines elements of bootasm.S and entry.S.
 
