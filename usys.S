@@ -4,7 +4,7 @@
 #define SYSCALL(name) \
   .globl name; \
   name: \
-    movq $SYS_ ## name, %eax; \
+    movq $SYS_ ## name, %rax; \
     int $T_SYSCALL; \
     ret
 
