@@ -21,10 +21,10 @@
 #define SEG_KDATA 2  // kernel data+stack
 #define SEG_UCODE 3  // user code
 #define SEG_UDATA 4  // user data+stack
-#define SEG_TSS   5  // this process's task state
+#define SEG_TSS   5  // this process's task state (entries 5 and 6)
 
 // cpu->gdt[NSEGS] holds the above segments.
-#define NSEGS     6
+#define NSEGS     7
 
 #ifndef __ASSEMBLER__
 // Segment Descriptor
@@ -43,13 +43,29 @@ struct segdesc {
     uint db : 1;         // 0 = 16-bit segment, 1 = 32-bit segment, 0 in IA-32e mode
     uint g : 1;          // Granularity: limit scaled by 4K when set
     uint base_31_24 : 8; // High bits of segment base address
-};
+} __attribute__((packed));
+
+// TSS Descriptor
+struct tssdesc {
+  struct segdesc segdesc;
+  uint base_63_32;
+  uint rsv1 : 8;
+  uint zeros : 5;
+  uint rsv2 : 19;
+} __attribute__((packed));
 
 // Normal segment
 #define SEG64(type, base, lim, dpl, code) (struct segdesc)    \
 { ((lim) >> 12) & 0xffff, (uint)(base) & 0xffff,              \
   ((uint)(base) >> 16) & 0xff, type, 1, dpl, 1,               \
-  (uint)(lim) >> 28, 0, code, 0, 1, (uint)(base) >> 24 }
+  (uint)(lim) >> 28, 0, code, 0, 1, ((uint)(base) >> 24) & 0xFF}
+
+#define TSS64(type, base, lim, dpl) (struct tssdesc)      \
+{ {(lim) & 0xffff, (uint)((uint64)(base) & 0xffff),       \
+  (uint)(((uint64)(base) >> 16) & 0xff), type, 0, dpl, 1, \
+  (uint)(lim) >> 16, 0, 0, 0, 0,                          \
+  (uint)(((uint64)(base) >> 24) & 0xFF)},                 \
+  (uint)((uint64)(base) >> 32), 0, 0, 0}
 #endif
 
 #define DPL_USER    0x3     // User DPL
@@ -125,44 +141,32 @@ typedef uint64 pml4e_t;
 
 // Task state segment format
 struct taskstate {
-    uint link;         // Old ts selector
-    uint esp0;         // Stack pointers and segment selectors
-    ushort ss0;        //   after an increase in privilege level
-    ushort padding1;
-    uint *esp1;
-    ushort ss1;
-    ushort padding2;
-    uint *esp2;
-    ushort ss2;
-    ushort padding3;
-    void *cr3;         // Page directory base
-    uint *eip;         // Saved state from last task switch
-    uint eflags;
-    uint eax;          // More saved state (registers)
-    uint ecx;
-    uint edx;
-    uint ebx;
-    uint *esp;
-    uint *ebp;
-    uint esi;
-    uint edi;
-    ushort es;         // Even more saved state (segment selectors)
-    ushort padding4;
-    ushort cs;
-    ushort padding5;
-    ushort ss;
-    ushort padding6;
-    ushort ds;
-    ushort padding7;
-    ushort fs;
-    ushort padding8;
-    ushort gs;
-    ushort padding9;
-    ushort ldt;
-    ushort padding10;
-    ushort t;          // Trap on task switch
+    uint rsv1;
+    uint rsp0_31_0;
+    uint rsp0_63_32;
+    uint rsp1_31_0;
+    uint rsp1_63_32;
+    uint rsp2_31_0;
+    uint rsp2_63_32;
+    uint64 rsv2;
+    uint ist1_31_0;
+    uint ist1_63_32;
+    uint ist2_31_0;
+    uint ist2_63_32;
+    uint ist3_31_0;
+    uint ist3_63_32;
+    uint ist4_31_0;
+    uint ist4_63_32;
+    uint ist5_31_0; 
+    uint ist5_63_32;
+    uint ist6_31_0;
+    uint ist6_63_32;
+    uint ist7_31_0;
+    uint ist7_63_32;
+    uint64 rsv3;
+    ushort rsv4;
     ushort iomb;       // I/O map base address
-};
+} __attribute__((packed));
 
 // Gate descriptors for interrupts and traps
 struct gatedesc {

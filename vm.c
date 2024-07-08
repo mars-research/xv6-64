@@ -205,11 +205,10 @@ switchuvm(struct proc *p)
     panic("switchuvm: no pml4");
 
   pushcli();
-  mycpu()->gdt[SEG_TSS] = SEG16(STS_T32A, &mycpu()->ts,
-                                sizeof(mycpu()->ts)-1, 0);
-  mycpu()->gdt[SEG_TSS].s = 0;
-  mycpu()->ts.ss0 = SEG_KDATA << 3;
-  mycpu()->ts.esp0 = (uint)p->kstack + KSTACKSIZE;
+  struct tssdesc *tss = (struct tssdesc *)&mycpu()->gdt[SEG_TSS];
+  *tss = TSS64(STS_T64A, &mycpu()->ts, sizeof(mycpu()->ts)-1, 0);
+  mycpu()->ts.rsp0_31_0 = (uint)((uint64)p->kstack + KSTACKSIZE);
+  mycpu()->ts.rsp0_63_32 = (uint)(((uint64)p->kstack + KSTACKSIZE) >> 32);
   // setting IOPL=0 in eflags *and* iomb beyond the tss segment limit
   // forbids I/O instructions (e.g., inb and outb) from user space
   mycpu()->ts.iomb = (ushort) 0xFFFF;
