@@ -85,7 +85,7 @@ exec(char *path, char **argv)
   curproc->tf->rsi = sp - (argc+1)*8;  // argv pointer
 
   sp -= (1+argc+1) * 8;
-  if(copyout(pml4, sp, ustack, (3+argc+1)*4) < 0)
+  if(copyout(pml4, sp, ustack, (1+argc+1)*8) < 0)
     goto bad;
 
   // Save program name for debugging.
