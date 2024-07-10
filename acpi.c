@@ -129,9 +129,13 @@ int acpiinit(void) {
   if (!rdsp)
     return 0;
   rsdt = acpitable((uint64)rdsp->rsdt_addr_phys);
+  if (!rsdt)
+    return 0;
   count = (rsdt->header.length - sizeof(*rsdt)) / 4;
   for (n = 0; n < count; n++) {
     struct acpi_desc_header *hdr = acpitable((uint64)rsdt->entry[n]);
+    if (!hdr)
+      return 0;
     if (!memcmp(hdr->signature, SIG_MADT, 4))
       madt = (void*) hdr;
   }
