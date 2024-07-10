@@ -153,10 +153,11 @@ char*           strncpy(char*, const char*, int);
 
 // syscall.c
 int             argint(int, int*);
+int             argint64(int, int64*);
 int             argptr(int, char**, int);
 int             argstr(int, char**);
-int             fetchint(uint, int*);
-int             fetchstr(uint, char**);
+int             fetchint(uint64, int64*);
+int             fetchstr(uint64, char**);
 void            syscall(void);
 
 // trap.c
@@ -176,12 +177,12 @@ void            kvmalloc(void);
 pml4e_t*        setupkvm(void);
 void*           acpitable(uint64);
 char*           uva2ka(pml4e_t*, char*);
-int             allocuvm(pml4e_t*, uint, uint);
+int             allocuvm(pml4e_t*, uint64, uint64);
 int             deallocuvm(pml4e_t*, uint64, uint64);
 void            freevm(pml4e_t*);
-void            inituvm(pml4e_t*, char*, uint);
-int             loaduvm(pml4e_t*, char*, struct inode*, uint, uint);
-pml4e_t*        copyuvm(pml4e_t*, uint);
+void            inituvm(pml4e_t*, char*, uint64);
+int             loaduvm(pml4e_t*, char*, struct inode*, uint, uint64);
+pml4e_t*        copyuvm(pml4e_t*, uint64);
 void            switchuvm(struct proc*);
 void            switchkvm(void);
 int             copyout(pml4e_t*, uint, void*, uint);
