@@ -20,11 +20,6 @@ alltraps:
   pushq %rbx
   pushq %rax
   
-  # Set up data segments.
-  movw $(SEG_KDATA<<3), %ax
-  movw %ax, %ds
-  movw %ax, %es
-
   # Call trap(tf), where tf=%esp
   movq %rsp, %rdi
   call trap
