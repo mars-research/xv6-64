@@ -133,6 +133,9 @@ struct tssdesc {
 #define PTE_ADDR(pte)   ((uint64)(pte) & ~0xFFF)
 #define PTE_FLAGS(pte)  ((uint64)(pte) &  0xFFF)
 
+// Sign extend a 48-bit virtual address to a 64-bit virtual address
+#define SIGN_EXTEND_VA(a) ((((uint64) (a)) & 0xFFFFFFFFFFFF) | (((((uint64) (a)) >> 47 & 0x1) ? 0xFFFFULL << 48 : 0x0)))
+
 #ifndef __ASSEMBLER__
 typedef uint64 pte_t;
 typedef uint64 pde_t;
