@@ -50,8 +50,8 @@ entry:
   movl    %eax, %cr4
 
   # Complete the initialization of the Page Map Level 4 table (PML4) with:
-  #   PML4[0]   = @identitymap  | PTE_P | PTE_W
-  #   PML4[511] = @kernmap      | PTE_P | PTE_W
+  #   PML4[0]               = @identitymap  | PTE_P | PTE_W
+  #   PML4[PML4X(KERNBASE)] = @kernmap      | PTE_P | PTE_W
   movl    $(V2P_WO(entrypml4)), %eax
 
   movl    $(V2P_WO(identitymap)), %ebx
@@ -61,7 +61,7 @@ entry:
 
   movl    $(V2P_WO(kernmap)), %ebx
   orl     $(PTE_P|PTE_W), %ebx
-  movl    $511, %ecx
+  movl    $(PML4X_WO(KERNBASE)), %ecx
   movl    %ebx, (%eax,%ecx,8)
 
   # Load CR3 with the physical address of PML4.
@@ -93,8 +93,8 @@ start64:
   # high addresses. The indirect call is needed because
   # the assembler produces a PC-relative instruction
   # for a direct jump.
-  movq    $(stack + KSTACKSIZE), %rsp
-  mov     $main, %rax
+  movabs  $(stack + KSTACKSIZE), %rsp
+  movabs  $main, %rax
   jmp     *%rax
 
 

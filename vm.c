@@ -111,7 +111,7 @@ mappages(pml4e_t *pml4, void *va, uint size, uint64 pa, int perm)
     *pte = pa | perm | PTE_P;
     if(a == last)
       break;
-    a = (char*)SIGN_EXTEND_VA(a + PGSIZE); // Virtual addresses must be sign-extended
+    a += PGSIZE;
     pa += PGSIZE;
   }
   return 0;
@@ -258,7 +258,7 @@ loaduvm(pml4e_t *pml4, char *addr, struct inode *ip, uint offset, uint64 sz)
 
   if((uint64) addr % PGSIZE != 0)
     panic("loaduvm: addr must be page aligned");
-  for(i = 0; i < sz; i = SIGN_EXTEND_VA(i + PGSIZE)){
+  for(i = 0; i < sz; i += PGSIZE){
     if((pte = walkpml4(pml4, addr+i, 0)) == 0)
       panic("loaduvm: address should exist");
     pa = PTE_ADDR(*pte);
@@ -286,7 +286,7 @@ allocuvm(pml4e_t *pml4, uint64 oldsz, uint64 newsz)
     return oldsz;
 
   a = PGROUNDUP(oldsz);
-  for(; a < newsz; a = SIGN_EXTEND_VA(a + PGSIZE)){
+  for(; a < newsz; a += PGSIZE){
     mem = kalloc();
     if(mem == 0){
       cprintf("allocuvm out of memory\n");
@@ -343,7 +343,7 @@ deallocuvm(pml4e_t *pml4, uint64 oldsz, uint64 newsz)
     return oldsz;
 
   a = PGROUNDUP(newsz);
-  for(; a  < oldsz; a = SIGN_EXTEND_VA(a + PGSIZE)){
+  for(; a  < oldsz; a += PGSIZE){
     pte = walkpml4_withinfo(pml4, (char*)a, 0, &walkpml4_failure_level);
     if(!pte){ // Skip the page table
       a = skiptables(a, walkpml4_failure_level) - PGSIZE;
@@ -411,7 +411,7 @@ copyuvm(pml4e_t *pml4, uint64 sz)
 
   if((d = setupkvm()) == 0)
     return 0;
-  for(i = 0; i < sz; i = SIGN_EXTEND_VA(i + PGSIZE)){
+  for(i = 0; i < sz; i += PGSIZE){
     if((pte = walkpml4(pml4, (void *) i, 0)) == 0)
       panic("copyuvm: pte should exist");
     if(!(*pte & PTE_P))
@@ -469,7 +469,7 @@ copyout(pml4e_t *pml4, uint va, void *p, uint len)
     memmove(pa0 + (va - va0), buf, n);
     len -= n;
     buf += n;
-    va = SIGN_EXTEND_VA(va0 + PGSIZE);
+    va = va0 + PGSIZE;
   }
   return 0;
 }

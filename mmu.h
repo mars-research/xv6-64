@@ -91,6 +91,7 @@ struct tssdesc {
 
 // page map level 4 index
 #define PML4X(va)       (((uint64)(va) >> PML4SHIFT) & 0x1FF)
+#define PML4X_WO(va)    (((va) >> PML4SHIFT) & 0x1FF)
 
 // page directory pointer table index
 #define PDPTX(va)       (((uint64)(va) >> PDPTSHIFT) & 0x1FF)
@@ -132,9 +133,6 @@ struct tssdesc {
 // Address in page table or page directory entry
 #define PTE_ADDR(pte)   ((uint64)(pte) & ~0xFFF)
 #define PTE_FLAGS(pte)  ((uint64)(pte) &  0xFFF)
-
-// Sign extend a 48-bit virtual address to a 64-bit virtual address
-#define SIGN_EXTEND_VA(a) ((((uint64) (a)) & 0xFFFFFFFFFFFF) | (((((uint64) (a)) >> 47 & 0x1) ? 0xFFFFULL << 48 : 0x0)))
 
 #ifndef __ASSEMBLER__
 typedef uint64 pte_t;

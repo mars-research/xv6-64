@@ -5,8 +5,8 @@
 #define DEVSPACE 0xFE000000         // Other devices are at high addresses
 
 // Key addresses for address space layout (see kmap in vm.c for layout)
-#define KERNBASE 0xFFFFFFFF80000000 // First kernel virtual address
-#define DEVBASE  0xFFFFFFFFFE000000 // First device virtual address
+#define KERNBASE 0x80000000000      // First kernel virtual address
+#define DEVBASE  0xFE000000000      // First device virtual address
 #define KERNLINK (KERNBASE+EXTMEM)  // Address where kernel is linked
 
 #define V2P(a) (((uint64) (a)) - KERNBASE)
