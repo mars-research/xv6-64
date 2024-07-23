@@ -25,6 +25,7 @@ proc.c
 swtch.S
 kalloc.c
 
+
 # system calls
 traps.h
 vectors.pl
@@ -59,10 +60,13 @@ string.c
 # low-level hardware
 mp.h
 mp.c
+acpi.h
+acpi.c
 lapic.c
 ioapic.c
 kbd.h
 kbd.c
+stdarg.h
 console.c
 uart.c
 

@@ -20,7 +20,7 @@ foreach (@lines) {
 	$linenum++;
 	chomp;
 	s/\s+$//;
-	if(length() >= 75){
+	if(length() > 75){
 		print STDERR "$file:$linenum: line too long\n";
 	}
 }

@@ -89,7 +89,7 @@ left: fs.c  # mild preference
 
 # Mild preference, but makes spreads of mp.c, lapic.c, and ioapic.c+picirq.c
 even: mp.c
-left: mp.c
+right: mp.c
 
 # even: pipe.c  # mild preference
 # string.c either
