@@ -217,7 +217,6 @@ awk '
 	# pr.pl -h "definitions" -2 t.defs | pad
 	# pr.pl -h "cross-references" -2 refs | pad
 	../pr.pl blank  # make sheet 1 start on left page
-	../pr.pl blank
 	for i in $files
 	do
 		../pr.pl -h "xv6/$i" $i
