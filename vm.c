@@ -34,7 +34,7 @@ seginit(void)
 // create any required page table pages.
 static pte_t *
 walkpglevel(uint64 *pgdir, const void *va, int alloc, int level,
-	    int *missing)
+            int *missing)
 {
   uint64 *entry;
   uint64 *next_pgdir;
