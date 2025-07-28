@@ -97,7 +97,7 @@ xchg(volatile uint *addr, uint newval)
 //PAGEBREAK!
 #ifdef X86_64
 // Since bootmain.c also includes this file and must not
-// contain x86-64 any code, this section is guarded by this
+// contain any x86-64 code, this section is guarded by this
 // X86_64 define (see Makefile for compilation option).
 
 struct segdesc;
