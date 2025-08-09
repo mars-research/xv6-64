@@ -6,8 +6,8 @@ on the same line as the name, the line number (or, in a few cases, numbers)
 where the name is defined.  Successive lines in an entry list the line
 numbers where the name is used.  For example, this entry:
 
-    swtch 3259
-        0377 2981 3022 3258 3259
+    swtch 3059
+        0377 2781 2822 3058 3059
 
-indicates that swtch is defined on line 3259 and is mentioned on five lines
-on sheets 03, 29, 30 and 26.
+indicates that swtch is defined on line 3059 and is mentioned on five lines
+on sheets 03, 27, 28 and 30.
