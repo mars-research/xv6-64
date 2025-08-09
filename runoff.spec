@@ -23,7 +23,7 @@ sheet1: left
 
 even: entry.S  # mild preference
 even: entryother.S  # mild preference
-even: main.c
+# even: main.c
 # mp.c don't care at all
 # even: initcode.S
 # odd: init.c

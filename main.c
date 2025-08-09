@@ -122,5 +122,3 @@ pml4e_t entrypml4[NPML4ENTRIES] = {
   [PML4X(KERNBASE)] = V2P(kernmap) + PTE_P + PTE_W,
 };
 
-//PAGEBREAK!
-// Blank page.

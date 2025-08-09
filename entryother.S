@@ -120,5 +120,3 @@ gdt64desc:
   .word   (gdt64desc - gdt64 - 1)
   .quad   gdt64
 
-//PAGEBREAK!
-# Blank page.

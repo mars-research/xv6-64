@@ -72,8 +72,6 @@ entry:
   lgdt    (V2P_WO(gdt64desc))
   ljmp    $(SEG_KCODE<<3), $(V2P_WO(start64))
 
-
-
 .p2align 4
 .code64 # Tell assembler to generate 64-bit code now.
 start64:
@@ -84,7 +82,6 @@ start64:
   movabs  $(stack + KSTACKSIZE), %rsp
   movabs  $main, %rax
   jmp     *%rax
-
 
 # Bootstrap GDT64
 .data
@@ -99,3 +96,4 @@ gdt64:
 gdt64desc:
   .word   (gdt64desc - gdt64 - 1)         # sizeof(gdt64) - 1
   .quad   V2P_WO(gdt64)                   # address gdt64
+
