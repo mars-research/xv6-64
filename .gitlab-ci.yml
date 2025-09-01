@@ -3,11 +3,11 @@ default:
 
 pages:
   script:
-    - mkdir .public
-    - make print && cp xv6.pdf .public/xv6-64.pdf
+    - mkdir public
+    - make print && cp xv6.pdf public/xv6-64.pdf
   artifacts:
     paths:
-      - .public
+      - public
   only:
     - main
 
