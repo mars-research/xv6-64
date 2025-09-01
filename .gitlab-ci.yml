@@ -5,6 +5,7 @@ pages:
   script:
     - mkdir public
     - make print && cp xv6.pdf public/xv6-64.pdf
+    - make .index.html && cp .index.html public/index.html
   artifacts:
     paths:
       - public

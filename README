@@ -1,6 +1,5 @@
 NOTE: This is the x86-64 version of xv6.
-The x86 version of xv6 can be found at 
-https://github.com/mit-pdos/xv6-public.git.
+https://gitlab.com/xv6-64/xv6-64 and https://xv6-64.gitlab.io/xv6-64
 
 xv6 is a reimplementation of Dennis Ritchie's and Ken Thompson's Unix
 Version 6 (v6). xv6 loosely follows the structure and style of v6,
@@ -39,6 +38,9 @@ Now install the QEMU PC simulator and run "make qemu", or
 "make qemu-nox" to run xv6 directly in the current terminal.
 
 ORIGINAL XV6 VERSION
+
+The x86 version of xv6 can be found at 
+https://github.com/mit-pdos/xv6-public.git.
 
 The original 32-bit xv6 foreword and acknowledgments are
 in the README.orig file.

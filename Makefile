@@ -195,7 +195,8 @@ clean:
 	*.o *.d *.asm *.sym vectors.S bootblock entryother \
 	initcode initcode.out kernel xv6.img fs.img kernelmemfs \
 	xv6memfs.img mkfs .gdbinit \
-	$(UPROGS)
+	$(UPROGS) \
+	.index.html
 
 # make a printout
 FILES = $(shell grep -v '^\#' runoff.list)
@@ -290,3 +291,13 @@ tar:
 	(cd /tmp; tar cf - xv6) | gzip >xv6-rev10.tar.gz  # the next one will be 10 (9/17)
 
 .PHONY: dist-test dist
+
+.index.html: .index.md
+        pandoc \  
+            --standalone \
+            --metadata='pagetitle:Xv6-64 Source Code' \
+            --variable='keywords:operating system' \
+            --variable='keywords:unix' \
+            --variable='highlighting-css: *{font-family:Arial,sans-serif;}' \
+            -o .index.html \
+            .index.md
