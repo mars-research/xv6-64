@@ -222,7 +222,10 @@ awk '
 	do
 		../pr.pl -h "xv6/$i" $i
 	done
-) | mpage -m50t50b -o -bA4 -T -t -2 -FCourier -L60 >all.ps
+) |
+	mpage -m50t50b -o -bA4 -T -t -2 -FCourier -L60 |
+	# mpage maps '-' to /minus (U+2212 MINUS SIGN); keep it as ASCII for copy/paste
+	sed 's,^045 /minus$,045 /hyphen,' >all.ps
 grep Pages: all.ps
 
 # if we have the nice font, use it
@@ -241,6 +244,6 @@ else
 	echo ugly font!
 	cp all.ps allf.ps
 fi
-ps2pdf allf.ps ../xv6.pdf
+ps2pdf -sPAPERSIZE=a4 allf.ps ../xv6.pdf
 # cd ..
 # pdftops xv6.pdf xv6.ps
